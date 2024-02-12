@@ -2,7 +2,7 @@
 
 This Streamlit app allows users to retrieve the frequencies of words in various languages based on multiple sources of data using the [wordfreq](https://pypi.org/project/wordfreq/) Python library.
 
-The app is also available on [link]()
+The app is also available on [link](https://word-frequency-counter.streamlit.app/)
 
 ## Getting Started
 
