@@ -1,6 +1,6 @@
 from wordfreq import word_frequency
 
-languages = {"it": "🇮🇹", "en": "🇬🇧", "fr": "🇫🇷", "es": "🇪🇸", "de": "🇩🇪"}
+languages = {"it": "🇮🇹", "en": "🇬🇧", "fr": "🇫🇷", "es": "🇪🇸", "de": "🇩🇪", "nl": "🇳🇱"}
 
 
 def get_word_frequencies(words, language_code):
