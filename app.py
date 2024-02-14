@@ -36,12 +36,12 @@ if st.button("Compute frequency"):
     if len(words) > 0:
         results = get_word_frequencies(words, language)
         df = pd.DataFrame(results.items(), columns=["Word", "Frequency"])
-        st.data_editor(df)
+        st.dataframe(df)
 
         csv = df.to_csv(index=False).encode("utf-8")
 
         st.download_button(
-            "Press to Download",
+            "Download csv",
             csv,
             f"wf_{language}.csv",
             "text/csv",
