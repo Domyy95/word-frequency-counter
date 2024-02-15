@@ -38,7 +38,9 @@ with text_area_col:
     words_inserted = st.text_area("Enter text here", height=300)
 
 with upload_txt_col:
-    uploaded_files = st.file_uploader("or Upload txt/csv files", accept_multiple_files=True)
+    uploaded_files = st.file_uploader(
+        "or Upload txt/csv files", accept_multiple_files=True
+    )
     words_from_file = []
     for uploaded_file in uploaded_files:
         data = uploaded_file.read().decode("utf-8")
@@ -49,7 +51,9 @@ words.extend(words_from_file)
 
 click = st.button(
     "Compute frequencies",
-    on_click=increment_n() if len(words) > 0 and st.session_state.words_inserted != words else None,
+    on_click=increment_n()
+    if len(words) > 0 and st.session_state.words_inserted != words
+    else None,
 )
 
 if words:
@@ -62,7 +66,7 @@ if words:
     if st.session_state.words_inserted != words and click:
         st.session_state.words_inserted = words
         st.session_state.results = get_word_frequencies(words, language)
-    
+
     # Display results in a table
     df = pd.DataFrame(st.session_state.results.items(), columns=["Word", "Frequency"])
     st.dataframe(df)
@@ -79,4 +83,3 @@ if words:
 
 elif click:
     st.write("No words to process")
-
