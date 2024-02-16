@@ -56,33 +56,52 @@ click = st.button(
     else None,
 )
 
+
 if words:
-    col1, col2 = st.columns([0.12, 0.88])
-    with col1:
+    st.markdown("""---""")
+    results_title_col, n_col = st.columns([0.12, 0.88])
+    with results_title_col:
         st.subheader("Results")
-    with col2:
+    with n_col:
         st.write(int(st.session_state.n))
 
     if st.session_state.words_inserted != words and click:
         st.session_state.words_inserted = words
         st.session_state.results = get_word_frequencies(words, language)
 
-    # Display results in a table
-    df = pd.DataFrame(st.session_state.results.items(), columns=["Word", "Frequency"])
-    df['Frequency'] = pd.to_numeric(df['Frequency'])
-    # Removing trailing zeros
-    df['Frequency'] = df['Frequency'].apply(lambda x: format(x, '.20f').rstrip('0').rstrip('.'))
-    st.dataframe(df, width=300)
+    # Display results
+    table_col, data_col = st.columns([0.6, 0.4])
+    with table_col:
+        df = pd.DataFrame(
+            st.session_state.results.items(), columns=["Word", "Frequency"]
+        )
+        df["Frequency"] = pd.to_numeric(df["Frequency"])
+        df["Frequency"] = df["Frequency"].apply(
+            lambda x: format(x, ".15f").rstrip("0").rstrip(".")
+        )
+        st.dataframe(
+            df,
+            width=350,
+        )
 
-    # Display download button
-    csv = df.to_csv(index=False).encode("utf-8")
-    st.download_button(
-        "Download csv",
-        csv,
-        f"wf_{language}.csv",
-        "text/csv",
-        key="download-csv",
-    )
+    with data_col:
+        frequency_sum = (
+            "{:.15f}".format(sum(df["Frequency"].astype(float).to_list()))
+            .rstrip("0")
+            .rstrip(".")
+        )
+        st.write(f"Words: {len(words)}")
+        st.write(f"Sum frequencies: {frequency_sum}")
+
+        # Display download button
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            "Download csv",
+            csv,
+            f"wf_{language}.csv",
+            "text/csv",
+            key="download-csv",
+        )
 
 elif click:
     st.write("No words to process")
