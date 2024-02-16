@@ -69,7 +69,10 @@ if words:
 
     # Display results in a table
     df = pd.DataFrame(st.session_state.results.items(), columns=["Word", "Frequency"])
-    st.dataframe(df)
+    df['Frequency'] = pd.to_numeric(df['Frequency'])
+    # Removing trailing zeros
+    df['Frequency'] = df['Frequency'].apply(lambda x: format(x, '.20f').rstrip('0').rstrip('.'))
+    st.dataframe(df, width=300)
 
     # Display download button
     csv = df.to_csv(index=False).encode("utf-8")
