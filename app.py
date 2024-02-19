@@ -66,6 +66,7 @@ def main():
     words_from_file = process_files_input(uploaded_files)
     words = words_inserted.split()
     words.extend(words_from_file)
+    words = set(words)
 
     click = st.button(
         "Compute frequencies",
