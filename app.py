@@ -22,6 +22,7 @@ def compute_frequencies(words, language):
     results = {}
     try:
         results = get_word_frequencies(words, language)
+        results = {key.capitalize(): f for key, f in results.items()}
     except Exception as e:
         st.error(f"Error computing word frequencies: {e}")
     return results
@@ -66,7 +67,9 @@ def main():
     words_from_file = process_files_input(uploaded_files)
     words = words_inserted.split()
     words.extend(words_from_file)
-    words = set(words)
+    words = list(
+        dict.fromkeys(words)
+    )  # remove double strings keeping the order of the list
 
     click = st.button(
         "Compute frequencies",
