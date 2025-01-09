@@ -117,9 +117,7 @@ def get_input(
             if input_data in possible_values:
                 return input_data
             else:
-                print(
-                    f"Errore, l'input deve essere uno di questi valori {possible_values}"
-                )
+                print(f"Errore, l'input deve essere uno di questi valori {possible_values}")
 
         else:
             return input_data
