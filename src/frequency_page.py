@@ -25,35 +25,32 @@ def remove_tab(id):
 
 
 def frequency_tab(data: FrequencyPage):
-    col1, _, col2 = st.columns([0.15, 0.82, 0.04])
-    with col1:
-        language = st.selectbox(
-            key=f"language_{data.id}",
-            label="Language",
-            options=languages,
-            format_func=lambda x: format_language_option(x),
-        )
+    language_col, _, remove_tab_col = st.columns([0.15, 0.82, 0.04])
 
-    with col2:
-        # remove button
-        st.button(
-            key=f"remove_{data.id}",
-            label="X",
-            on_click=lambda: remove_tab(data.id),
-            type="primary",
-        )
+    language = language_col.selectbox(
+        key=f"language_{data.id}",
+        label="Language",
+        options=languages,
+        format_func=lambda x: format_language_option(x),
+    )
+
+    remove_tab_col.button(
+        key=f"remove_{data.id}",
+        label="X",
+        on_click=lambda: remove_tab(data.id),
+        type="primary",
+    )
 
     text_area_col, upload_txt_col = st.columns([0.6, 0.4])
+    words_inserted = text_area_col.text_area(
+        key=f"words_{data.id}", label="Enter text here", height=300
+    )
 
-    with text_area_col:
-        words_inserted = st.text_area(key=f"words_{data.id}", label="Enter text here", height=300)
-
-    with upload_txt_col:
-        uploaded_files = st.file_uploader(
-            key=f"upload_{data.id}",
-            label="or Upload txt/csv files",
-            accept_multiple_files=True,
-        )
+    uploaded_files = upload_txt_col.file_uploader(
+        key=f"upload_{data.id}",
+        label="or Upload txt/csv files",
+        accept_multiple_files=True,
+    )
 
     words_from_file = process_files_input(uploaded_files)
     words = words_inserted.split()
@@ -70,14 +67,11 @@ def frequency_tab(data: FrequencyPage):
 
     if words:
         st.markdown("---")
-        results_title_col, n_col = st.columns([0.12, 0.88])
-        with results_title_col:
-            st.subheader("Results")
-        with n_col:
-            st.write(int(data.n))
+        results_title_col, n_col, _ = st.columns([0.09, 0.1, 0.81])
+        results_title_col.subheader("Results")
+        n_col.write(int(data.n))
 
         if data.words_inserted_before != words and click:
-            data.new_words(words)
             data.compute_frequencies(words, language)
 
         # Results

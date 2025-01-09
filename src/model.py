@@ -12,10 +12,8 @@ class FrequencyPage:
         # Increment the session state n by 0.5 because at every click the button is like is clicked twice
         self.n += 0.5
 
-    def new_words(self, words):
-        self.words_inserted_before = words
-
     def compute_frequencies(self, words, language):
+        self.words_inserted_before = words
         results = {}
         try:
             results = get_word_frequencies(words, language)
