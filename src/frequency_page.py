@@ -1,21 +1,7 @@
 import streamlit as st
 import pandas as pd
-from src.logic import languages, get_word_frequencies
-
-
-def compute_frequencies(words, language):
-    results = {}
-    try:
-        results = get_word_frequencies(words, language)
-        results = {key.capitalize(): f for key, f in results.items()}
-    except Exception as e:
-        st.error(f"Error computing word frequencies: {e}")
-    return results
-
-
-def increment_n():
-    # Increment the session state n by 0.5 because at every click the button is like is clicked twice
-    st.session_state.n += 0.5
+from model import FrequencyPage
+from wordfreq_logic import languages
 
 
 def format_language_option(language_code: str):
@@ -33,24 +19,38 @@ def process_files_input(uploaded_files):
     return words_from_file
 
 
-def frequency_tab(tab_n: int):
-    language = st.selectbox(
-        key=f"language_{tab_n}",
-        label="Language",
-        options=languages,
-        format_func=lambda x: format_language_option(x),
-    )
+def remove_tab(id):
+    if len(st.session_state.tabs) > 1:
+        st.session_state.tabs.pop(id)
+
+
+def frequency_tab(data: FrequencyPage):
+    col1, _, col2 = st.columns([0.15, 0.82, 0.04])
+    with col1:
+        language = st.selectbox(
+            key=f"language_{data.id}",
+            label="Language",
+            options=languages,
+            format_func=lambda x: format_language_option(x),
+        )
+
+    with col2:
+        # remove button
+        st.button(
+            key=f"remove_{data.id}",
+            label="X",
+            on_click=lambda: remove_tab(data.id),
+            type="primary",
+        )
 
     text_area_col, upload_txt_col = st.columns([0.6, 0.4])
 
     with text_area_col:
-        words_inserted = st.text_area(
-            key=f"words_{tab_n}", label="Enter text here", height=300
-        )
+        words_inserted = st.text_area(key=f"words_{data.id}", label="Enter text here", height=300)
 
     with upload_txt_col:
         uploaded_files = st.file_uploader(
-            key=f"upload_{tab_n}",
+            key=f"upload_{data.id}",
             label="or Upload txt/csv files",
             accept_multiple_files=True,
         )
@@ -58,15 +58,13 @@ def frequency_tab(tab_n: int):
     words_from_file = process_files_input(uploaded_files)
     words = words_inserted.split()
     words.extend(words_from_file)
-    words = list(
-        dict.fromkeys(words)
-    )  # remove double strings keeping the order of the list
+    words = list(dict.fromkeys(words))  # Remove double strings keeping the order of the list
 
     click = st.button(
-        key=f"compute_{tab_n}",
+        key=f"compute_{data.id}",
         label="Compute frequencies",
-        on_click=increment_n()
-        if len(words) > 0 and st.session_state.words_inserted_before != words
+        on_click=data.increment_n()
+        if len(words) > 0 and data.words_inserted_before != words
         else None,
     )
 
@@ -76,18 +74,16 @@ def frequency_tab(tab_n: int):
         with results_title_col:
             st.subheader("Results")
         with n_col:
-            st.write(int(st.session_state.n))
+            st.write(int(data.n))
 
-        if st.session_state.words_inserted_before != words and click:
-            st.session_state.words_inserted_before = words
-            st.session_state.results = compute_frequencies(words, language)
+        if data.words_inserted_before != words and click:
+            data.new_words(words)
+            data.compute_frequencies(words, language)
 
-        # Display results
+        # Results
         table_col, data_col = st.columns([0.6, 0.4])
         with table_col:
-            df = pd.DataFrame(
-                st.session_state.results.items(), columns=["Word", "Frequency"]
-            )
+            df = pd.DataFrame(data.results.items(), columns=["Word", "Frequency"])
             df["Frequency"] = pd.to_numeric(df["Frequency"])
             df["Frequency"] = df["Frequency"].apply(
                 lambda x: format(x, ".15f").rstrip("0").rstrip(".")
@@ -106,10 +102,10 @@ def frequency_tab(tab_n: int):
             st.write(f"Words: {len(words)}")
             st.write(f"Sum frequencies: {frequency_sum}")
 
-            # Display download button
+            # Download button
             csv = df.to_csv(index=False).encode("utf-8")
             st.download_button(
-                key=f"download_{tab_n}",
+                key=f"download_{data.id}",
                 label="Download csv",
                 data=csv,
                 file_name=f"wf_{language}.csv",
