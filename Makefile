@@ -13,6 +13,7 @@ help:
 	@echo 	- make requirements.txt: create requirements.txt from requirements.in
 	@echo 	- make install-dev: install development dependencies from requirements-dev.txt
 	@echo 	- make install: install dependencies from requirements.txt
+	@echo 	- make fetch-tags: fetch tags from remote
 	@echo 	- make setup-dev-env: run make install-dev + add git hook for commits syntax checking
 	@echo 	- make test: run the test suite
 	@echo 	- make clean: remove __pycache__ directories and other garbage
@@ -41,6 +42,9 @@ install-dev: requirements-dev.txt
 
 install: requirements.txt
 	uv pip install -r requirements.txt
+
+fetch-tags:
+	git fetch --tags
 
 setup-dev-env: install-dev
 	pre-commit install
