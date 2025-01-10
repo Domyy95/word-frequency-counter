@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from model import FrequencyPage
+from model import FrequencyPageManager
 from wordfreq_logic import languages
 
 
@@ -24,7 +24,7 @@ def remove_tab(id):
         st.session_state.tabs.pop(id)
 
 
-def frequency_tab(data: FrequencyPage):
+def frequency_tab(data: FrequencyPageManager):
     language_col, _, remove_tab_col = st.columns([0.15, 0.82, 0.04])
 
     language = language_col.selectbox(

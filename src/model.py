@@ -1,12 +1,13 @@
 from wordfreq_logic import get_word_frequencies
 
 
-class FrequencyPage:
+class FrequencyPageManager:
     def __init__(self, id):
         self.id = id
         self.n = 0
         self.words_inserted_before = []
         self.results = {}
+        self.language = ""
 
     def increment_n(self):
         # Increment the session state n by 0.5 because at every click the button is like is clicked twice
@@ -14,6 +15,7 @@ class FrequencyPage:
 
     def compute_frequencies(self, words, language):
         self.words_inserted_before = words
+        self.language = language
         results = {}
         try:
             results = get_word_frequencies(words, language)
