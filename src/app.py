@@ -64,7 +64,7 @@ def main():
     # Page
     st.title("Word frequency counter")
     st.write(
-        "This app retrieve the frequencies of words in many languages, based on many sources of data using the [wordfreq](https://pypi.org/project/wordfreq/) python library"
+        "This app retrieves the frequencies of words in many languages, based on many sources of data using the [wordfreq](https://pypi.org/project/wordfreq/) python library"
     )
     add_tab_col, prepare_download, download_all_col = st.columns([0.08, 0.12, 0.8])
     add_tab_col.button("Add tab", on_click=add_tab)
