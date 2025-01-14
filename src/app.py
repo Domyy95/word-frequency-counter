@@ -1,6 +1,5 @@
 import io
 import zipfile
-import copy
 import pandas as pd
 import streamlit as st
 from frequency_page import frequency_tab
@@ -27,9 +26,9 @@ def prepare_download_all():
     for tab in tabs.values():
         if tab.results:
             if tab.language in to_download:
-                to_download[tab.language].update(tab.results)
+                to_download[tab.language] = pd.concat([to_download[tab.language], tab.to_df()])
             else:
-                to_download[tab.language] = copy.deepcopy(tab.results)
+                to_download[tab.language] = tab.to_df()
 
     st.session_state.data = to_download
 
@@ -37,8 +36,7 @@ def prepare_download_all():
 def prepare_zip() -> io.BytesIO:
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, "w") as zf:
-        for language, results in st.session_state.data.items():
-            df = pd.DataFrame(results.items(), columns=["Word", "Frequency"])
+        for language, df in st.session_state.data.items():
             zf.writestr(f"wf_{language}.csv", df.to_csv(index=False).encode("utf-8"))
 
     zip_buffer.seek(0)
@@ -83,8 +81,7 @@ def main():
                 )
 
             else:
-                language, results = list(st.session_state.data.items())[0]
-                df = pd.DataFrame(results.items(), columns=["Word", "Frequency"])
+                language, df = list(st.session_state.data.items())[0]
                 csv = df.to_csv(index=False).encode("utf-8")
                 st.download_button(
                     label="Download",

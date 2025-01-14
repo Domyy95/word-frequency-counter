@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 from model import FrequencyPageManager
 from wordfreq_logic import languages
 
@@ -77,11 +76,7 @@ def frequency_tab(data: FrequencyPageManager):
         # Results
         table_col, data_col = st.columns([0.6, 0.4])
         with table_col:
-            df = pd.DataFrame(data.results.items(), columns=["Word", "Frequency"])
-            df["Frequency"] = pd.to_numeric(df["Frequency"])
-            df["Frequency"] = df["Frequency"].apply(
-                lambda x: format(x, ".15f").rstrip("0").rstrip(".")
-            )
+            df = data.to_df()
             st.dataframe(
                 data=df,
                 width=350,
