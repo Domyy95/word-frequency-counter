@@ -73,22 +73,22 @@ def main():
         if "data" in st.session_state:
             if len(st.session_state.data) > 1:
                 zip_buffer = prepare_zip()
-                st.download_button(
-                    label="Download",
-                    data=zip_buffer,
-                    file_name="wf.zip",
-                    mime="application/zip",
-                )
+                data = zip_buffer
+                file_name = "wf.zip"
+                mime = "application/zip"
 
             else:
                 language, df = list(st.session_state.data.items())[0]
-                csv = df.to_csv(index=False).encode("utf-8")
-                st.download_button(
-                    label="Download",
-                    data=csv,
-                    file_name=f"wf_{language}.csv",
-                    mime="text/csv",
-                )
+                data = df.to_csv(index=False).encode("utf-8")
+                file_name = f"wf_{language}.csv"
+                mime = "text/csv"
+
+            st.download_button(
+                label="Download",
+                data=data,
+                file_name=file_name,
+                mime=mime,
+            )
 
     tabs_objs = st.tabs([tab_name.format(n=n) for n in st.session_state.tabs.keys()])
 
