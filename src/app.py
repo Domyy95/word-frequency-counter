@@ -90,6 +90,23 @@ def main():
                 mime=mime,
             )
 
+    if "data" in st.session_state:
+        st.markdown("---")
+        st.subheader("Aggregated data")
+
+        cols = st.columns(len(st.session_state.data))
+        for idx, (language, df) in enumerate(st.session_state.data.items()):
+            frequency_sum = (
+                "{:.15f}".format(sum(df["Frequency"].astype(float).to_list()))
+                .rstrip("0")
+                .rstrip(".")
+            )
+
+            with cols[idx]:
+                st.write(f"**Language**: {language.upper()}")
+                st.write(f"Words: {len(df)}")
+                st.write(f"Sum frequencies: {frequency_sum}")
+
     tabs_objs = st.tabs([tab_name.format(n=n) for n in st.session_state.tabs.keys()])
 
     for tab, tab_n in zip(tabs_objs, st.session_state.tabs.keys()):

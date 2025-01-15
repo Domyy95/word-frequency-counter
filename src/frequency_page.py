@@ -88,8 +88,8 @@ def frequency_tab(data: FrequencyPageManager):
                 .rstrip("0")
                 .rstrip(".")
             )
-            st.write(f"Words: {len(words)}")
-            st.write(f"Sum frequencies: {frequency_sum}")
+            st.write(f"**Words**: {len(words)}")
+            st.write(f"**Sum frequencies**: {frequency_sum}")
 
             # Download button
             csv = df.to_csv(index=False).encode("utf-8")
