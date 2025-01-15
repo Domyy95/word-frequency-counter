@@ -52,7 +52,7 @@ mdurl==0.1.2
     # via markdown-it-py
 msgpack==1.1.0
     # via wordfreq
-narwhals==1.21.1
+narwhals==1.22.0
     # via altair
 numpy==2.2.1
     # via
