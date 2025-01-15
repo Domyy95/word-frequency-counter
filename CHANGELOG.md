@@ -1,3 +1,9 @@
+## v2.1.1 (2025-01-15)
+
+### Fix
+
+- add no aggregation data to download case
+
 ## v2.1.0 (2025-01-15)
 
 ### Feat
