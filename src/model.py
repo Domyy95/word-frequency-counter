@@ -1,3 +1,4 @@
+import pandas as pd
 from wordfreq_logic import get_word_frequencies
 
 
@@ -24,3 +25,9 @@ class FrequencyPageManager:
             print(f"Error computing word frequencies: {e}")
 
         self.results = results
+
+    def to_df(self) -> pd.DataFrame:
+        df = pd.DataFrame(self.results.items(), columns=["Word", "Frequency"])
+        df["Frequency"] = pd.to_numeric(df["Frequency"])
+        df["Frequency"] = df["Frequency"].apply(lambda x: format(x, ".15f").rstrip("0").rstrip("."))
+        return df
