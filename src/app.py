@@ -69,7 +69,7 @@ def main():
 
     prepare_download.button("Aggregate Data", on_click=prepare_download_all)
 
-    if "data" in st.session_state:
+    if "data" in st.session_state and len(st.session_state.data) > 0:
         st.markdown("---")
         st.subheader("Aggregated data")
 
@@ -104,6 +104,9 @@ def main():
             file_name=file_name,
             mime=mime,
         )
+
+    elif "data" in st.session_state and len(st.session_state.data) == 0:
+        st.write("No data computed to download")
 
     tabs_objs = st.tabs([tab_name.format(n=n) for n in st.session_state.tabs.keys()])
 
