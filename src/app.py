@@ -64,31 +64,10 @@ def main():
     st.write(
         "This app retrieves the frequencies of words in many languages, based on many sources of data using the [wordfreq](https://pypi.org/project/wordfreq/) python library"
     )
-    add_tab_col, prepare_download, download_all_col = st.columns([0.08, 0.12, 0.8])
+    add_tab_col, prepare_download, _ = st.columns([0.08, 0.12, 0.8])
     add_tab_col.button("Add tab", on_click=add_tab)
 
     prepare_download.button("Aggregate Data", on_click=prepare_download_all)
-
-    with download_all_col:
-        if "data" in st.session_state:
-            if len(st.session_state.data) > 1:
-                zip_buffer = prepare_zip()
-                data = zip_buffer
-                file_name = "wf.zip"
-                mime = "application/zip"
-
-            else:
-                language, df = list(st.session_state.data.items())[0]
-                data = df.to_csv(index=False).encode("utf-8")
-                file_name = f"wf_{language}.csv"
-                mime = "text/csv"
-
-            st.download_button(
-                label="Download",
-                data=data,
-                file_name=file_name,
-                mime=mime,
-            )
 
     if "data" in st.session_state:
         st.markdown("---")
@@ -106,6 +85,25 @@ def main():
                 st.write(f"**Language**: {language.upper()}")
                 st.write(f"Words: {len(df)}")
                 st.write(f"Sum frequencies: {frequency_sum}")
+
+        if len(st.session_state.data) > 1:
+            zip_buffer = prepare_zip()
+            data = zip_buffer
+            file_name = "wf.zip"
+            mime = "application/zip"
+
+        else:
+            language, df = list(st.session_state.data.items())[0]
+            data = df.to_csv(index=False).encode("utf-8")
+            file_name = f"wf_{language}.csv"
+            mime = "text/csv"
+
+        st.download_button(
+            label="Download",
+            data=data,
+            file_name=file_name,
+            mime=mime,
+        )
 
     tabs_objs = st.tabs([tab_name.format(n=n) for n in st.session_state.tabs.keys()])
 

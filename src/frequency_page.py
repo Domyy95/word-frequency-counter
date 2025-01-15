@@ -24,11 +24,12 @@ def remove_tab(id):
 
 
 def frequency_tab(data: FrequencyPageManager):
-    language_col, _, remove_tab_col = st.columns([0.15, 0.82, 0.04])
+    language_col, compute_freq_col, remove_tab_col = st.columns([0.15, 0.82, 0.04])
 
     language = language_col.selectbox(
         key=f"language_{data.id}",
         label="Language",
+        label_visibility="collapsed",
         options=languages,
         format_func=lambda x: format_language_option(x),
     )
@@ -56,13 +57,14 @@ def frequency_tab(data: FrequencyPageManager):
     words.extend(words_from_file)
     words = list(dict.fromkeys(words))  # Remove double strings keeping the order of the list
 
-    click = st.button(
-        key=f"compute_{data.id}",
-        label="Compute frequencies",
-        on_click=data.increment_n()
-        if len(words) > 0 and data.words_inserted_before != words
-        else None,
-    )
+    with compute_freq_col:
+        click = st.button(
+            key=f"compute_{data.id}",
+            label="Compute frequencies",
+            on_click=data.increment_n()
+            if len(words) > 0 and data.words_inserted_before != words
+            else None,
+        )
 
     if words:
         st.markdown("---")
