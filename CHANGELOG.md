@@ -1,3 +1,26 @@
+## v2.1.0 (2025-01-15)
+
+### Feat
+
+- show aggregated data
+
+### Fix
+
+- fix float numbers aggregated download
+
+### Refactor
+
+- refactoring button positions
+- refactoring download button
+
+## v2.0.2 (2025-01-13)
+
+### Fix
+
+- fix app description
+
+## v2.0.1 (2025-01-12)
+
 ## v2.0.0 (2025-01-10)
 
 ### Feat
