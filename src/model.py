@@ -1,3 +1,4 @@
+import re
 import pandas as pd
 from wordfreq_logic import get_word_frequencies
 
@@ -14,12 +15,24 @@ class FrequencyPageManager:
         # Increment the session state n by 0.5 because at every click the button is like is clicked twice
         self.n += 0.5
 
+    def clean_word(self, text):
+        # Remove any character that is not a letter or a space, keeping accented characters
+        cleaned_text = re.sub(r"[^a-zA-ZàùèòìáéíóúâêîôûÀÙÈÒÌÁÉÍÓÚÂÊÎÔÛ\s]", "", text)
+        return cleaned_text
+
+    def clean_words(self, words):
+        result = list(dict.fromkeys(words))  # Remove double strings keeping the order of the list
+        result = [self.clean_word(word) for word in result]
+        result = [word for word in result if word]  # Remove empty strings
+        return result
+
     def compute_frequencies(self, words, language):
-        self.words_inserted_before = words
+        words_cleaned = self.clean_words(words)
+        self.words_inserted_before = words_cleaned
         self.language = language
         results = {}
         try:
-            results = get_word_frequencies(words, language)
+            results = get_word_frequencies(words_cleaned, language)
             results = {key.capitalize(): f for key, f in results.items()}
         except Exception as e:
             print(f"Error computing word frequencies: {e}")

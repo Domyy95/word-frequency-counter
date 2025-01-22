@@ -55,7 +55,6 @@ def frequency_tab(data: FrequencyPageManager):
     words_from_file = process_files_input(uploaded_files)
     words = words_inserted.split()
     words.extend(words_from_file)
-    words = list(dict.fromkeys(words))  # Remove double strings keeping the order of the list
 
     with compute_freq_col:
         click = st.button(
