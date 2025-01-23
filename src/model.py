@@ -15,16 +15,19 @@ class FrequencyPageManager:
         # Increment the session state n by 0.5 because at every click the button is like is clicked twice
         self.n += 0.5
 
-    def clean_word(self, text: str) -> str:
+    def clean_word(self, text: str) -> list:
         # Remove any character that is not a letter or a space, keeping accented characters
-        cleaned_text = re.sub(r"[^a-zA-ZàùèòìáéíóúâêîôûÀÙÈÒÌÁÉÍÓÚÂÊÎÔÛ\s]", "", text)
-        return cleaned_text
+        cleaned_text = re.sub(r"[^a-zA-ZàùèòìáéíóúâêîôûÀÙÈÒÌÁÉÍÓÚÂÊÎÔÛ\s]", " ", text)
+        return cleaned_text.split(" ")
 
     def clean_words(self, words: list) -> list:
         result = list(dict.fromkeys(words))  # Remove double strings keeping the order of the list
-        result = [self.clean_word(word) for word in result]
-        result = [word for word in result if word]  # Remove empty strings
-        return result
+        clean_result = []
+        for word in result:
+            for subword in word.split(","):
+                clean_result.extend(self.clean_word(subword.strip()))
+        clean_result = [word for word in clean_result if word]  # Remove empty words
+        return clean_result
 
     def compute_frequencies(self, words: list, language: str) -> None:
         words_cleaned = self.clean_words(words)
