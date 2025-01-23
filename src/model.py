@@ -18,7 +18,7 @@ class FrequencyPageManager:
     def clean_word(self, text: str) -> list:
         # Remove any character that is not a letter or a space, keeping accented characters
         cleaned_text = re.sub(r"[^a-zA-ZàùèòìáéíóúâêîôûÀÙÈÒÌÁÉÍÓÚÂÊÎÔÛ\s]", " ", text)
-        return cleaned_text.split(" ")
+        return cleaned_text.split()
 
     def clean_words(self, words: list) -> list:
         result = list(dict.fromkeys(words))  # Remove double strings keeping the order of the list
