@@ -1,22 +1,11 @@
 import streamlit as st
 from model import FrequencyPageManager
 from wordfreq_logic import languages
-from utils import convert_df_to_csv, convert_df_to_xlsx, xlsx_mime, csv_mime
+from utils import convert_df_to_csv, convert_df_to_xlsx, xlsx_mime, csv_mime, process_files_input
 
 
 def format_language_option(language_code: str) -> str:
     return f"{language_code.upper()}  {languages[language_code]}"
-
-
-def process_files_input(uploaded_files: list) -> list:
-    words_from_file = []
-    for uploaded_file in uploaded_files:
-        try:
-            data = uploaded_file.read().decode("utf-8")
-            words_from_file.extend(data.split())
-        except Exception as e:
-            st.error(f"Error processing file: {e}")
-    return words_from_file
 
 
 def remove_tab(id: int):
@@ -49,7 +38,7 @@ def frequency_tab(data: FrequencyPageManager):
 
     uploaded_files = upload_txt_col.file_uploader(
         key=f"upload_{data.id}",
-        label="or Upload txt/csv files",
+        label="or Upload txt/csv/docx files",
         accept_multiple_files=True,
     )
 
