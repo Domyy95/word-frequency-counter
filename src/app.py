@@ -4,6 +4,7 @@ import pandas as pd
 import streamlit as st
 from frequency_page import frequency_tab
 from model import FrequencyPageManager
+from utils import convert_df, csv_mime, xlsx_mime
 
 tab_name = "Tab {n}"
 
@@ -33,11 +34,11 @@ def prepare_download_all():
     st.session_state.data = to_download
 
 
-def prepare_zip() -> io.BytesIO:
+def prepare_zip(file_type: str) -> io.BytesIO:
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, "w") as zf:
         for language, df in st.session_state.data.items():
-            zf.writestr(f"wf_{language}.csv", df.to_csv(index=False).encode("utf-8"))
+            zf.writestr(f"wf_{language}.{file_type}", convert_df(df, file_type))
 
     zip_buffer.seek(0)
     return zip_buffer
@@ -64,10 +65,16 @@ def main():
     st.write(
         "This app retrieves the frequencies of words in many languages, based on many sources of data using the [wordfreq](https://pypi.org/project/wordfreq/) python library"
     )
-    add_tab_col, prepare_download, _ = st.columns([0.08, 0.12, 0.8])
+    add_tab_col, prepare_download, file_type_col, _ = st.columns([0.08, 0.12, 0.1, 0.7])
     add_tab_col.button("Add tab", on_click=add_tab)
 
     prepare_download.button("Aggregate Data", on_click=prepare_download_all)
+
+    file_type = file_type_col.selectbox(
+        label="File type",
+        label_visibility="collapsed",
+        options=["xlsx", "csv"],
+    )
 
     if "data" in st.session_state and len(st.session_state.data) > 0:
         st.markdown("---")
@@ -87,16 +94,16 @@ def main():
                 st.write(f"Sum frequencies: {frequency_sum}")
 
         if len(st.session_state.data) > 1:
-            zip_buffer = prepare_zip()
+            zip_buffer = prepare_zip(file_type)
             data = zip_buffer
             file_name = "wf.zip"
             mime = "application/zip"
 
         else:
             language, df = list(st.session_state.data.items())[0]
-            data = df.to_csv(index=False).encode("utf-8")
-            file_name = f"wf_{language}.csv"
-            mime = "text/csv"
+            data = convert_df(df, file_type)
+            file_name = f"wf_{language}.{file_type}"
+            mime = csv_mime if file_type == "csv" else xlsx_mime
 
         st.download_button(
             label="Download",

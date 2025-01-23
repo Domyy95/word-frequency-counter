@@ -1,13 +1,14 @@
 import streamlit as st
 from model import FrequencyPageManager
 from wordfreq_logic import languages
+from utils import convert_df_to_csv, convert_df_to_xlsx, xlsx_mime, csv_mime
 
 
-def format_language_option(language_code: str):
+def format_language_option(language_code: str) -> str:
     return f"{language_code.upper()}  {languages[language_code]}"
 
 
-def process_files_input(uploaded_files):
+def process_files_input(uploaded_files: list) -> list:
     words_from_file = []
     for uploaded_file in uploaded_files:
         try:
@@ -18,7 +19,7 @@ def process_files_input(uploaded_files):
     return words_from_file
 
 
-def remove_tab(id):
+def remove_tab(id: int):
     if len(st.session_state.tabs) > 1:
         st.session_state.tabs.pop(id)
 
@@ -92,14 +93,20 @@ def frequency_tab(data: FrequencyPageManager):
             st.write(f"**Words**: {len(words)}")
             st.write(f"**Sum frequencies**: {frequency_sum}")
 
-            # Download button
-            csv = df.to_csv(index=False).encode("utf-8")
             st.download_button(
-                key=f"download_{data.id}",
+                key=f"download_{data.id}_csv",
                 label="Download csv",
-                data=csv,
+                data=convert_df_to_csv(df),
                 file_name=f"wf_{language}.csv",
-                mime="text/csv",
+                mime=csv_mime,
+            )
+
+            st.download_button(
+                key=f"download_{data.id}_xlsx",
+                label="Download xlsx",
+                data=convert_df_to_xlsx(df),
+                file_name=f"wf_{language}.xlsx",
+                mime=xlsx_mime,
             )
 
     elif click:
