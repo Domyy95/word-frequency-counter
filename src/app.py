@@ -5,6 +5,7 @@ import streamlit as st
 from frequency_page import frequency_tab
 from model import FrequencyPageManager
 from utils import convert_df, csv_mime, xlsx_mime
+from wordfreq_logic import languages
 
 tab_name = "Tab {n}"
 
@@ -63,8 +64,20 @@ def main():
     # Page
     st.title("Word frequency counter")
     st.write(
-        "This app retrieves the frequencies of words in many languages, based on many sources of data using the [wordfreq](https://pypi.org/project/wordfreq/) python library"
+        "This app retrieves word frequencies across multiple languages using various data sources, powered by the [wordfreq](https://pypi.org/project/wordfreq/) Python library."
     )
+    features_col, _ = st.columns([0.7, 0.3])
+    with features_col.expander("**Main features** 🚀"):
+        st.write(
+            f"""
+        - **Multiple languages** supported: {' '.join(list(languages.values()))}.
+        - **Upload files** in TXT, CSV, or DOCX formats for processing.
+        - **Add multiple tabs** to analyze different datasets simultaneously.
+        - **Download results** from individual tabs or aggregate them in CSV or XLSX format.
+        - **Download all results** as a ZIP file, with aggregated data organized by language.
+        - **Process numbered list inputs** summing word frequencies within each list entry. For example, the input `1) a,b,c 2) d,e,f` will generate individual word frequencies, as well as summed frequencies for the groups 'a, b, c' and 'd, e, f'.
+        """
+        )
     add_tab_col, prepare_download, file_type_col, _ = st.columns([0.08, 0.12, 0.1, 0.7])
     add_tab_col.button("Add tab", on_click=add_tab)
 
