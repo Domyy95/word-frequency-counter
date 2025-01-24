@@ -28,6 +28,14 @@ def convert_df(df: DataFrame, file_type: str) -> bytes:
         raise ValueError(f"Invalid file type: {file_type}")
 
 
+def split_input(text: str) -> list:
+    new_line = text.split("\n")
+    comma = [word.strip() for line in new_line for word in line.split(",")]
+    semicolon = [word.strip() for word in comma for word in word.split(";")]
+    dot = [word.strip() for word in semicolon for word in word.split(".")]
+    return dot
+
+
 def process_files_input(uploaded_files: list) -> list:
     words_from_file = []
     for uploaded_file in uploaded_files:
@@ -36,12 +44,12 @@ def process_files_input(uploaded_files: list) -> list:
 
             if file_extension in ["txt", "csv"]:
                 data = uploaded_file.read().decode("utf-8")
-                words_from_file.extend(data.split())
+                words_from_file.extend(split_input(data))
 
             elif file_extension == "docx":
                 doc = Document(BytesIO(uploaded_file.read()))
                 for para in doc.paragraphs:
-                    words_from_file.extend(para.text.split())
+                    words_from_file.extend(split_input(para.text))
 
             else:
                 error(f"Unsupported file format: {uploaded_file.name}")

@@ -1,7 +1,14 @@
 import streamlit as st
 from model import FrequencyPageManager
 from wordfreq_logic import languages
-from utils import convert_df_to_csv, convert_df_to_xlsx, xlsx_mime, csv_mime, process_files_input
+from utils import (
+    convert_df_to_csv,
+    convert_df_to_xlsx,
+    xlsx_mime,
+    csv_mime,
+    process_files_input,
+    split_input,
+)
 
 
 def format_language_option(language_code: str) -> str:
@@ -43,7 +50,7 @@ def frequency_tab(data: FrequencyPageManager):
     )
 
     words_from_file = process_files_input(uploaded_files)
-    words = words_inserted.split()
+    words = split_input(words_inserted)
     words.extend(words_from_file)
 
     with compute_freq_col:
@@ -51,7 +58,7 @@ def frequency_tab(data: FrequencyPageManager):
             key=f"compute_{data.id}",
             label="Compute frequencies",
             on_click=data.increment_n()
-            if len(words) > 0 and data.words_inserted_before != words
+            if len(words) > 0 and data.input_is_changed(words=words)
             else None,
         )
 
@@ -61,8 +68,8 @@ def frequency_tab(data: FrequencyPageManager):
         results_title_col.subheader("Results")
         n_col.write(int(data.n))
 
-        if data.words_inserted_before != words and click:
-            data.compute_frequencies(words, language)
+        if data.input_is_changed(words=words) and click:
+            data.compute_frequencies(language)
 
         # Results
         table_col, data_col = st.columns([0.6, 0.4])
@@ -79,7 +86,7 @@ def frequency_tab(data: FrequencyPageManager):
                 .rstrip("0")
                 .rstrip(".")
             )
-            st.write(f"**Words**: {len(words)}")
+            st.write(f"**Words**: {len(data.words)}")
             st.write(f"**Sum frequencies**: {frequency_sum}")
 
             st.download_button(
