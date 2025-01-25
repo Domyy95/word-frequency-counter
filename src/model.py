@@ -1,6 +1,7 @@
 import re
 import pandas as pd
 from wordfreq_logic import get_word_frequencies
+from utils import process_files_input, split_input
 
 
 class FrequencyPageManager:
@@ -11,10 +12,6 @@ class FrequencyPageManager:
         self.words = []
         self.results = {}
         self.language = ""
-
-    def increment_n(self):
-        # Increment the session state n by 0.5 because at every click the button is like is clicked twice
-        self.n += 0.5
 
     def clean_word(self, text: str) -> str:
         # Remove any character that is not a letter or a space, keeping accented characters
@@ -29,21 +26,27 @@ class FrequencyPageManager:
         clean_result = [word for word in clean_result if word]  # Remove empty words
         return clean_result
 
-    def compute_frequencies(self, language: str) -> None:
+    def get_words(self, words_input: str, uploaded_files: list) -> list[str]:
+        words = self.clean_words(split_input(words_input))
+        files_content = process_files_input(uploaded_files)
+        words += self.clean_words(split_input(files_content))
+        return words
+
+    def compute_frequencies(self, words_input: str, uploaded_files: list, language: str) -> None:
+        self.words = self.get_words(words_input, uploaded_files)
+        if self.words == self.words_inserted_before:
+            return
         self.words_inserted_before = self.words.copy()
         self.language = language
         results = {}
         try:
             results = get_word_frequencies(self.words, language)
             results = {key.capitalize(): f for key, f in results.items()}
+            self.n += 1
         except Exception as e:
             print(f"Error computing word frequencies: {e}")
 
         self.results = results
-
-    def input_is_changed(self, words: list) -> bool:
-        self.words = self.clean_words(words)
-        return self.words != self.words_inserted_before
 
     def to_df(self) -> pd.DataFrame:
         df = pd.DataFrame(self.results.items(), columns=["Word", "Frequency"])

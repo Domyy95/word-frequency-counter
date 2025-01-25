@@ -37,19 +37,19 @@ def split_input(text: str) -> list:
 
 
 def process_files_input(uploaded_files: list) -> list:
-    words_from_file = []
+    result = ""
     for uploaded_file in uploaded_files:
         try:
             file_extension = uploaded_file.name.split(".")[-1].lower()
 
             if file_extension in ["txt", "csv"]:
                 data = uploaded_file.read().decode("utf-8")
-                words_from_file.extend(split_input(data))
+                result += data
 
             elif file_extension == "docx":
                 doc = Document(BytesIO(uploaded_file.read()))
                 for para in doc.paragraphs:
-                    words_from_file.extend(split_input(para.text))
+                    result += para.text + "\n"
 
             else:
                 error(f"Unsupported file format: {uploaded_file.name}")
@@ -57,4 +57,4 @@ def process_files_input(uploaded_files: list) -> list:
         except Exception as e:
             error(f"Error processing file {uploaded_file.name}: {e}")
 
-    return words_from_file
+    return result

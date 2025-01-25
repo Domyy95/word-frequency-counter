@@ -1,14 +1,7 @@
 import streamlit as st
 from model import FrequencyPageManager
 from wordfreq_logic import languages
-from utils import (
-    convert_df_to_csv,
-    convert_df_to_xlsx,
-    xlsx_mime,
-    csv_mime,
-    process_files_input,
-    split_input,
-)
+from utils import convert_df_to_csv, convert_df_to_xlsx, xlsx_mime, csv_mime
 
 
 def format_language_option(language_code: str) -> str:
@@ -21,9 +14,9 @@ def remove_tab(id: int):
 
 
 def frequency_tab(data: FrequencyPageManager):
-    language_col, compute_freq_col, remove_tab_col = st.columns([0.15, 0.82, 0.04])
+    language_selector_col, compute_freq_button_col, remove_tab_col = st.columns([0.15, 0.82, 0.04])
 
-    language = language_col.selectbox(
+    language = language_selector_col.selectbox(
         key=f"language_{data.id}",
         label="Language",
         label_visibility="collapsed",
@@ -49,27 +42,19 @@ def frequency_tab(data: FrequencyPageManager):
         accept_multiple_files=True,
     )
 
-    words_from_file = process_files_input(uploaded_files)
-    words = split_input(words_inserted)
-    words.extend(words_from_file)
+    something_inserted = words_inserted != "" or len(uploaded_files) > 0
+    click = compute_freq_button_col.button(key=f"compute_{data.id}", label="Compute frequencies")
 
-    with compute_freq_col:
-        click = st.button(
-            key=f"compute_{data.id}",
-            label="Compute frequencies",
-            on_click=data.increment_n()
-            if len(words) > 0 and data.input_is_changed(words=words)
-            else None,
-        )
-
-    if words:
+    # if something_inserted and click:
+    if something_inserted:
         st.markdown("---")
         results_title_col, n_col, _ = st.columns([0.09, 0.1, 0.81])
         results_title_col.subheader("Results")
-        n_col.write(int(data.n))
 
-        if data.input_is_changed(words=words) and click:
-            data.compute_frequencies(language)
+        if click:
+            data.compute_frequencies(words_inserted, uploaded_files, language)
+
+        n_col.write(int(data.n))
 
         # Results
         table_col, data_col = st.columns([0.6, 0.4])
