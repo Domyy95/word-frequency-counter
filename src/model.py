@@ -20,7 +20,7 @@ class FrequencyPageManager:
         cleaned_text = re.sub(r"[^a-zA-ZàùèòìáéíóúâêîôûÀÙÈÒÌÁÉÍÓÚÂÊÎÔÛ\s]", "", text)
         return cleaned_text
 
-    def clean_words(self, words: list) -> list:
+    def clean_words(self, words: list[str]) -> list[str]:
         result = list(dict.fromkeys(words))  # Remove double strings keeping the order of the list
         clean_result = []
         for word in result:
@@ -28,13 +28,15 @@ class FrequencyPageManager:
         clean_result = [word for word in clean_result if word]  # Remove empty words
         return clean_result
 
-    def get_words(self, words_input: str, uploaded_files: list) -> list[str]:
+    def get_words(self, words_input: str, uploaded_files: list[str]) -> list[str]:
         words = self.clean_words(split_input(words_input))
         files_content = process_files_input(uploaded_files)
         words += self.clean_words(split_input(files_content))
         return words
 
-    def compute_frequencies(self, words_input: str, uploaded_files: list, language: str) -> None:
+    def compute_frequencies(
+        self, words_input: str, uploaded_files: list[str], language: str
+    ) -> None:
         self.words = self.get_words(words_input, uploaded_files)
         if self.words == self.words_inserted_before:
             return

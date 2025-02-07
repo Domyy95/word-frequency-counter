@@ -29,7 +29,7 @@ def convert_df(df: DataFrame, file_type: str) -> bytes:
         raise ValueError(f"Invalid file type: {file_type}")
 
 
-def split_input(text: str) -> list:
+def split_input(text: str) -> list[str]:
     new_line = text.split("\n")
     comma = [word.strip() for line in new_line for word in line.split(",")]
     semicolon = [word.strip() for word in comma for word in word.split(";")]
@@ -37,7 +37,7 @@ def split_input(text: str) -> list:
     return dot
 
 
-def process_files_input(uploaded_files: list) -> list:
+def process_files_input(uploaded_files: list[str]) -> list[str]:
     result = ""
     for uploaded_file in uploaded_files:
         try:
