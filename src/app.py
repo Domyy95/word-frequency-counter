@@ -75,8 +75,8 @@ def main():
                 - **Add multiple tabs** to analyze different datasets simultaneously.
                 - **Download results** from individual tabs or aggregate them in CSV or XLSX format.
                 - **Download all results** as a ZIP file, with aggregated data organized by language.
-                - **Process numbered list inputs** summing word frequencies within each list entry. For example, the input `1) a,b,c 2) d,e,f` will generate individual word frequencies, as well as summed frequencies for the groups 'a, b, c' and 'd, e, f'.
         """
+            # - **Process numbered list inputs** summing word frequencies within each list entry. For example, the input `1) a,b,c 2) d,e,f` will generate individual word frequencies, as well as summed frequencies for the groups 'a, b, c' and 'd, e, f'.
         )
     add_tab_col, prepare_download, file_type_col, _ = st.columns([0.08, 0.12, 0.1, 0.7])
     add_tab_col.button("Add tab", on_click=add_tab)
