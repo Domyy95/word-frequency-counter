@@ -1,7 +1,8 @@
 import streamlit as st
+
 from model import FrequencyPageManager
+from utils import convert_df_to_csv, convert_df_to_xlsx, csv_mime, xlsx_mime
 from wordfreq_logic import languages
-from utils import convert_df_to_csv, convert_df_to_xlsx, xlsx_mime, csv_mime
 
 
 def format_language_option(language_code: str) -> str:

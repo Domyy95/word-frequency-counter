@@ -1,7 +1,9 @@
 import re
+
 import pandas as pd
-from wordfreq_logic import get_word_frequencies
+
 from utils import process_files_input, split_input
+from wordfreq_logic import get_word_frequencies
 
 
 class FrequencyPageManager:
