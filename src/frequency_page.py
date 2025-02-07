@@ -1,32 +1,23 @@
 import streamlit as st
+
 from model import FrequencyPageManager
+from utils import convert_df_to_csv, convert_df_to_xlsx, csv_mime, xlsx_mime
 from wordfreq_logic import languages
 
 
-def format_language_option(language_code: str):
+def format_language_option(language_code: str) -> str:
     return f"{language_code.upper()}  {languages[language_code]}"
 
 
-def process_files_input(uploaded_files):
-    words_from_file = []
-    for uploaded_file in uploaded_files:
-        try:
-            data = uploaded_file.read().decode("utf-8")
-            words_from_file.extend(data.split())
-        except Exception as e:
-            st.error(f"Error processing file: {e}")
-    return words_from_file
-
-
-def remove_tab(id):
+def remove_tab(id: int):
     if len(st.session_state.tabs) > 1:
         st.session_state.tabs.pop(id)
 
 
 def frequency_tab(data: FrequencyPageManager):
-    language_col, compute_freq_col, remove_tab_col = st.columns([0.15, 0.82, 0.04])
+    language_selector_col, compute_freq_button_col, remove_tab_col = st.columns([0.15, 0.82, 0.04])
 
-    language = language_col.selectbox(
+    language = language_selector_col.selectbox(
         key=f"language_{data.id}",
         label="Language",
         label_visibility="collapsed",
@@ -48,32 +39,23 @@ def frequency_tab(data: FrequencyPageManager):
 
     uploaded_files = upload_txt_col.file_uploader(
         key=f"upload_{data.id}",
-        label="or Upload txt/csv files",
+        label="or Upload txt/csv/docx files",
         accept_multiple_files=True,
     )
 
-    words_from_file = process_files_input(uploaded_files)
-    words = words_inserted.split()
-    words.extend(words_from_file)
-    words = list(dict.fromkeys(words))  # Remove double strings keeping the order of the list
+    something_inserted = words_inserted != "" or len(uploaded_files) > 0
+    click = compute_freq_button_col.button(key=f"compute_{data.id}", label="Compute frequencies")
 
-    with compute_freq_col:
-        click = st.button(
-            key=f"compute_{data.id}",
-            label="Compute frequencies",
-            on_click=data.increment_n()
-            if len(words) > 0 and data.words_inserted_before != words
-            else None,
-        )
-
-    if words:
+    # if something_inserted and click:
+    if something_inserted:
         st.markdown("---")
         results_title_col, n_col, _ = st.columns([0.09, 0.1, 0.81])
         results_title_col.subheader("Results")
-        n_col.write(int(data.n))
 
-        if data.words_inserted_before != words and click:
-            data.compute_frequencies(words, language)
+        if click:
+            data.compute_frequencies(words_inserted, uploaded_files, language)
+
+        n_col.write(int(data.n))
 
         # Results
         table_col, data_col = st.columns([0.6, 0.4])
@@ -90,17 +72,23 @@ def frequency_tab(data: FrequencyPageManager):
                 .rstrip("0")
                 .rstrip(".")
             )
-            st.write(f"**Words**: {len(words)}")
+            st.write(f"**Words**: {len(data.words)}")
             st.write(f"**Sum frequencies**: {frequency_sum}")
 
-            # Download button
-            csv = df.to_csv(index=False).encode("utf-8")
             st.download_button(
-                key=f"download_{data.id}",
+                key=f"download_{data.id}_csv",
                 label="Download csv",
-                data=csv,
+                data=convert_df_to_csv(df),
                 file_name=f"wf_{language}.csv",
-                mime="text/csv",
+                mime=csv_mime,
+            )
+
+            st.download_button(
+                key=f"download_{data.id}_xlsx",
+                label="Download xlsx",
+                data=convert_df_to_xlsx(df),
+                file_name=f"wf_{language}.xlsx",
+                mime=xlsx_mime,
             )
 
     elif click:
