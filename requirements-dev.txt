@@ -22,9 +22,9 @@ decli==0.6.2
     # via commitizen
 distlib==0.3.9
     # via virtualenv
-filelock==3.16.1
+filelock==3.17.0
     # via virtualenv
-identify==2.6.5
+identify==2.6.6
     # via pre-commit
 jinja2==3.1.5
     # via commitizen
@@ -42,7 +42,7 @@ platformdirs==4.3.6
     # via virtualenv
 pre-commit==3.8.0
     # via -r requirements-dev.in
-prompt-toolkit==3.0.48
+prompt-toolkit==3.0.50
     # via questionary
 pyproject-hooks==1.2.0
     # via
@@ -54,13 +54,13 @@ pyyaml==6.0.2
     #   pre-commit
 questionary==2.1.0
     # via commitizen
-ruff==0.9.1
+ruff==0.9.5
     # via -r requirements-dev.in
 termcolor==2.5.0
     # via commitizen
 tomlkit==0.13.2
     # via commitizen
-virtualenv==20.28.1
+virtualenv==20.29.1
     # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit

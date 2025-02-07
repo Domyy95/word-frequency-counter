@@ -1,3 +1,24 @@
+## v2.2.0 (2025-02-07)
+
+### Feat
+
+- add features tab
+- add main features tab
+- add docx file read
+- add download as xlsx file
+- remove special characters from input
+
+### Fix
+
+- fix words input
+- fix clean words
+
+### Refactor
+
+- type annotations
+- refactoring and fixes
+- minor fixes
+
 ## v2.1.1 (2025-01-15)
 
 ### Fix
