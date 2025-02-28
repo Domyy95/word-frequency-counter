@@ -10,7 +10,7 @@ testpaths = "tests"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "2.2.0"
+version = "2.3.0"
 tag_format = "v$version"
 version_files = [
     "src/__init__.py",

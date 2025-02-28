@@ -1,3 +1,9 @@
+## v2.3.0 (2025-02-28)
+
+### Feat
+
+- aggregate recognizing n) in the list and sum up the groups
+
 ## v2.2.0 (2025-02-07)
 
 ### Feat

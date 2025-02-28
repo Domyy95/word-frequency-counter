@@ -24,7 +24,7 @@ distlib==0.3.9
     # via virtualenv
 filelock==3.17.0
     # via virtualenv
-identify==2.6.6
+identify==2.6.8
     # via pre-commit
 jinja2==3.1.5
     # via commitizen
@@ -54,13 +54,13 @@ pyyaml==6.0.2
     #   pre-commit
 questionary==2.1.0
     # via commitizen
-ruff==0.9.5
+ruff==0.9.8
     # via -r requirements-dev.in
 termcolor==2.5.0
     # via commitizen
 tomlkit==0.13.2
     # via commitizen
-virtualenv==20.29.1
+virtualenv==20.29.2
     # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit
