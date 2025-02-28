@@ -35,7 +35,7 @@ def join_same_idx_grouped_words(grouped_words: list[GroupedWords]) -> list[Group
     result = {}
     for group in grouped_words:
         if group.index in result:
-            result[group.index].words.extend(group.words)
+            result[group.index].append_list(group)
         else:
             result[group.index] = copy.deepcopy(group)
 
