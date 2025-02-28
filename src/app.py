@@ -66,8 +66,8 @@ def main():
     # Page
     st.title("Word frequency counter")
     st.write(
-        """This app retrieves word frequencies across multiple languages using various data sources, powered by the [wordfreq](https://pypi.org/project/wordfreq/) Python library.
-        App developed by [Dom](https://www.linkedin.com/in/dominic-crippa/)
+        """This app retrieves word frequencies across multiple languages using various data sources,
+        powered by the [wordfreq](https://pypi.org/project/wordfreq/) Python library.
         """
     )
     features_col, _ = st.columns([0.7, 0.3])
