@@ -1,7 +1,7 @@
 import streamlit as st
 
 from model import FrequencyPageManager
-from utils import convert_df_to_csv, convert_df_to_xlsx, csv_mime, xlsx_mime
+from output import csv_mime, get_data_to_download, xlsx_mime
 from wordfreq_logic import languages
 
 
@@ -72,13 +72,13 @@ def frequency_tab(data: FrequencyPageManager):
                 .rstrip("0")
                 .rstrip(".")
             )
-            st.write(f"**Words**: {len(data.words)}")
+            st.write(f"**Words**: {data.total_words()}")
             st.write(f"**Sum frequencies**: {frequency_sum}")
 
             st.download_button(
                 key=f"download_{data.id}_csv",
                 label="Download csv",
-                data=convert_df_to_csv(df),
+                data=get_data_to_download(data.words, "csv"),
                 file_name=f"wf_{language}.csv",
                 mime=csv_mime,
             )
@@ -86,7 +86,7 @@ def frequency_tab(data: FrequencyPageManager):
             st.download_button(
                 key=f"download_{data.id}_xlsx",
                 label="Download xlsx",
-                data=convert_df_to_xlsx(df),
+                data=get_data_to_download(data.words, "xlsx"),
                 file_name=f"wf_{language}.xlsx",
                 mime=xlsx_mime,
             )
