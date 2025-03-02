@@ -46,7 +46,7 @@ class FrequencyPageManager:
         current_index = None
 
         for word in words:
-            match = re.match(r"(\d+)\s*\)", word)
+            match = re.match(r"(\d+)\s*\)?", word)
             if match:
                 if current_group:
                     current_group = list(dict.fromkeys(current_group))
