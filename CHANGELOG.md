@@ -1,3 +1,9 @@
+## v2.3.3 (2025-03-02)
+
+### Fix
+
+- fix recognize numbers without )
+
 ## v2.3.2 (2025-02-28)
 
 ### Fix
