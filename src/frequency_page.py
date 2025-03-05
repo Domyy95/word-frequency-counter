@@ -1,6 +1,6 @@
 import streamlit as st
 
-from model import FrequencyPageManager
+from model import FrequencyPageManager, col_frequency
 from output import csv_mime, get_data_to_download, xlsx_mime
 from wordfreq_logic import languages
 
@@ -68,7 +68,7 @@ def frequency_tab(data: FrequencyPageManager):
 
         with data_col:
             frequency_sum = (
-                "{:.15f}".format(sum(df["Frequency"].astype(float).to_list()))
+                "{:.15f}".format(sum(df[col_frequency].astype(float).to_list()))
                 .rstrip("0")
                 .rstrip(".")
             )
