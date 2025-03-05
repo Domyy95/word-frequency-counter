@@ -4,7 +4,7 @@ from io import BytesIO
 import pandas as pd
 from pandas import DataFrame, ExcelWriter
 
-from model import GroupedWords
+from model import GroupedWords, col_word, col_frequency
 
 xlsx_mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 csv_mime = "text/csv"
@@ -12,6 +12,7 @@ csv_mime = "text/csv"
 
 def _convert_df_to_xlsx(df: DataFrame) -> bytes:
     output = BytesIO()
+    df[col_frequency] = df[col_frequency].applymap(lambda x: str(x).replace(".", ","))
     with ExcelWriter(output, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Sheet1")
     output.seek(0)
@@ -49,13 +50,13 @@ def get_data_to_download(words_data: list[GroupedWords], file_type: str) -> byte
     data = []
     for group in words_data_joined:
         group_data = [(word, freq) for word, freq in group.frequencies.items()]
-        df_group = DataFrame(group_data, columns=["word", "frequency"])
-        df_group["frequency"] = pd.to_numeric(df_group["frequency"], errors="coerce")
+        df_group = DataFrame(group_data, columns=[col_word, col_frequency])
+        df_group[col_frequency] = pd.to_numeric(df_group[col_frequency], errors="coerce")
         # frequency sum row with empty word
-        total = df_group["frequency"].sum()
-        total_row = DataFrame([["", total]], columns=["word", "frequency"])
+        total = df_group[col_frequency].sum()
+        total_row = DataFrame([["", total]], columns=[col_word, col_frequency])
         df_group = pd.concat([df_group, total_row], ignore_index=True)
-        df_group["frequency"] = df_group["frequency"].apply(
+        df_group[col_frequency] = df_group[col_frequency].apply(
             lambda x: format(x, ".15f").rstrip("0").rstrip(".")
         )
         data.append(df_group)

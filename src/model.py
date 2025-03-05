@@ -5,6 +5,10 @@ import pandas as pd
 from utils import process_files_input, split_input
 from wordfreq_logic import get_word_frequencies
 
+col_word = "word"
+col_frequency = "frequency"
+col_sums = "sums"
+
 
 class GroupedWords:
     def __init__(self, words: list[str], language, index):
@@ -96,9 +100,11 @@ class FrequencyPageManager:
         for group in self.words:
             data.update(group.frequencies)
 
-        df = pd.DataFrame(data.items(), columns=["Word", "Frequency"])
-        df["Frequency"] = pd.to_numeric(df["Frequency"])
-        df["Frequency"] = df["Frequency"].apply(lambda x: format(x, ".15f").rstrip("0").rstrip("."))
+        df = pd.DataFrame(data.items(), columns=[col_word, col_frequency])
+        df[col_frequency] = pd.to_numeric(df[col_frequency])
+        df[col_frequency] = df[col_frequency].apply(
+            lambda x: format(x, ".15f").rstrip("0").rstrip(".")
+        )
         return df
 
     def total_words(self) -> int:
