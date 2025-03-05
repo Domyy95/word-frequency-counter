@@ -1,3 +1,10 @@
+## v2.4.0 (2025-03-05)
+
+### Feat
+
+- add sums columns when download
+- put , instead of . when downloading xlsx files
+
 ## v2.3.3 (2025-03-02)
 
 ### Fix
